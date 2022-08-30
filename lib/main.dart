@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import 'Data.dart';
 import 'Data_Second_Screen/_ClassSecondScreen.dart';
+import 'Data_Second_Screen/color_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,23 +19,27 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final now = DateTime.now();
     final DATA_FOR_SECONDSCREEN = Data("lancer", 1, "$now");
+
     return stateWidget(
         // name: "lancer killer",
         //  data: DATA_FOR_SECONDSCREEN,
-        child: MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    ));
+        child: Builder(builder: (context) {
+      final color = StateInheritWidget.of(context)?.color;
+      return MaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          scaffoldBackgroundColor: color,
+        ),
+        home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      );
+    }));
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
-
   final String title;
 
   @override
@@ -46,7 +51,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-    final counter = StateInheritWidget.of(context)?.counter;
+    // final counter = StateInheritWidget.of(context)?.counter;
+    final counter = 0;
+    final color = StateInheritWidget.of(context)?.color;
+
     final now = DateTime.now();
     final DATA_FOR_SECONDSCREEN = Data("lancer", 1, "$now");
 
@@ -68,31 +76,38 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             //${state_widget_data?.data.dateTime}  ${state_widget_data?.name}  ${state_widget_data?.name}
             RaisedButton(
+
+              color: Colors.purpleAccent,
+              textColor: Colors.black,
+              padding: EdgeInsets.all(20.0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(16.0))),
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => CounterPage()));
               },
-              child: Text("button Next Page"),
-            ),
-            TextFormField(
-              decoration:
-                  const InputDecoration(hintText: "DONT TYPE ANYTHING HERE"),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
-                }
-                return null;
-              },
+              child: Text("Counter Page"),
             ),
             RaisedButton(
               onPressed: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            ClassSecondScreen(data: DATA_FOR_SECONDSCREEN)));
+                      //builder: (context) => ClassSecondScreen(data: DATA_FOR_SECONDSCREEN)
+                      builder: (context) => ColorPage(),
+                    ));
               },
-              child: Text("Pass Through Class"),
+              padding: const EdgeInsets.all(0.0),
+              textColor: Colors.white,
+              child: Container(
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: <Color>[
+                    Color(0xFF0D47A1),
+                    Color(0xFF1976D2),
+                    Color(0xFF42A5F5),
+                  ])),
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text("Color Plate Page")),
             ),
             Form(
               key: _formKey,
@@ -112,15 +127,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Validate will return true if the form is valid, or false if
-                        // the form is invalid.
-                        if (_formKey.currentState!.validate()) {
-                          // Process data.
-                        }
-                      },
-                      child: const Text('Submit'),
+                    child: Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Validate will return true if the form is valid, or false if
+                          // the form is invalid.
+                          if (_formKey.currentState!.validate()) {
+                            // Process data.
+                          }
+                        },
+                        child: Text('Submit'),
+                      ),
                     ),
                   ),
                 ],

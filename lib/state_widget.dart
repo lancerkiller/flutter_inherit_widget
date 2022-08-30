@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'Data.dart';
 
-
 //statefull widget to update the counter
 
 class stateWidget extends StatefulWidget {
@@ -18,6 +17,7 @@ class _stateWidgetState extends State<stateWidget> {
   //because counter at staless cannot change and we make it final and now the counter here can update
   //because it is stafull
   int counter = 0;
+  Color color = Colors.red;
 
   void incrementCounter() {
     setState(() {
@@ -25,18 +25,27 @@ class _stateWidgetState extends State<stateWidget> {
     });
   }
 
+  void changeColor(Color color){
+    setState(() {
+      this.color = color;
+    });
+  }
+
   @override
   Widget build(BuildContext context) => StateInheritWidget(
-      child: widget.child, counter: counter, stateWidget: this);
+      child: widget.child, counter: counter, color: color, stateWidget: this);
 //this allow the Statewidget to access the StateInherit
 }
 
 class StateInheritWidget extends InheritedWidget {
   final int? counter;
+  final Color? color;
+
   //final String? name;
   //final Data data;
 
   final _stateWidgetState stateWidget;
+
 /*
 //for statefull which require statefull widget
   StateInheritWidget(
@@ -52,6 +61,7 @@ class StateInheritWidget extends InheritedWidget {
     Key? key,
     required child,
     required this.counter,
+    required this.color,
     required this.stateWidget,
     //required this.name,
     //required this.data,
@@ -67,15 +77,13 @@ class StateInheritWidget extends InheritedWidget {
 
    */
 
-  static _stateWidgetState? of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<StateInheritWidget>()?.stateWidget;
-
-
-
+  static _stateWidgetState? of(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<StateInheritWidget>()
+      ?.stateWidget;
 
   @override
   bool updateShouldNotify(StateInheritWidget oldWidget) =>
-      oldWidget.counter != counter;
+      oldWidget.color != color;
 }
 
 /*
